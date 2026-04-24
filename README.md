@@ -19,7 +19,8 @@ For each project, a dedicated local interpreter has been configured using a virt
 #### 1. Data Importer Setup
 The importer is responsible for fetching raw taxi data from Google Drive and populating the PostgreSQL database.
 
-**Location:** `/NYC-Taxi-FullStack/backend/importer`  
+**Location:** `/NYC-Taxi-FullStack/backend/importer`
+
 **Core Dependencies:**
 * `pandas`: For data manipulation.
 * `gdown`: To download large datasets from Google Drive.
@@ -41,6 +42,7 @@ pip install python-dotenv pandas gdown sqlalchemy sqlalchemy-utils psycopg2-bina
 The API serves as the bridge between the PostgreSQL database and the Android mobile application.
 
 **Location:** `/NYC-Taxi-FullStack/backend/api`
+
 **Core Dependencies:**
 * `flask`: Web framework for building the REST API.
 * `psycopg2-binary`: To connect with the taxi database.
