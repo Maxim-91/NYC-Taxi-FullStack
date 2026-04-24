@@ -29,6 +29,10 @@ The importer is responsible for fetching raw taxi data from Google Drive and pop
 
 **Installation command used:**
 ```bash
+pip install -r requirements.txt
+```
+or
+```bash
 pip install python-dotenv pandas gdown sqlalchemy sqlalchemy-utils psycopg2-binary
 ```
 
@@ -43,8 +47,29 @@ The API serves as the bridge between the PostgreSQL database and the Android mob
 * `python-dotenv`: For configuration management.
 
 **Installation command used:**
+
+```bash
+pip install -r requirements.txt
+```
+or
 ```bash
 pip install flask python-dotenv psycopg2-binary
 ```
+
+#### 3. Database Population Instructions
+
+To correctly populate the database, run the importer script located at `/NYC-Taxi-FullStack/backend/importer/main.py`. 
+
+The script provides a text-based menu. **Crucial:** You must execute the options sequentially from 1 to 9 to ensure data integrity.
+
+| Option | Action (Finnish) | Description |
+| :--- | :--- | :--- |
+| **1** | `luo tietokanta` | **Schema Creation:** The script creates the `nyc_taxi` database and all required tables (yellow_trips, zones, etc.). |
+| **2** | `lataa valmis datapaketti` | **Data Download:** Downloads compressed archives from Google Drive into the `/data` folder. (Duration depends on your internet speed). |
+| **3 - 8** | `vendorit, payment_typet...` | **Lookup Tables:** Populates small reference tables (boroughs, payment types, rate codes, etc.). This is nearly instantaneous. |
+| **9** | `yellow_trips` | **Main Import:** The final step. Performs a high-performance import of the primary trip data. This is the longest process. |
+
+> **Note:** Make sure your PostgreSQL service is running and your `.env` credentials are correct before starting with option 1.
+
 
 ---
