@@ -81,5 +81,11 @@ The script provides a text-based menu. **Crucial:** You must execute the options
 
 > **Note 2:** On option 2, a file 5016.dat.gz - 5.24GB will be downloaded, make sure you have enough free disk space.
 
+#### 4. Database Verification
+You may verify the data import using any PostgreSQL client (such as pgAdmin or DBeaver). Ensure that all 7 tables (`boroughs`, `payment_types`, `rate_codes`, `service_zones`, `vendors`, `yellow_trips`, and `zones`) are correctly created under the **public** schema as shown in Figure 1.
+
+<img width="219" height="849" alt="Figure1" src="https://github.com/user-attachments/assets/30aa2760-96b9-42d2-b5e5-c0d24024fba4" />
+
+**Figure 1.** NYC Taxi Database Schema and Table Hierarchy in PostgreSQL.
 
 ---
