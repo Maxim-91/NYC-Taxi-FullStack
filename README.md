@@ -19,7 +19,8 @@ For each project, a dedicated local interpreter has been configured using a virt
 #### 1. Data Importer Setup
 The importer is responsible for fetching raw taxi data from Google Drive and populating the PostgreSQL database.
 
-**Location:** `/NYC-Taxi-FullStack/backend/importer`  
+**Location:** `/NYC-Taxi-FullStack/backend/importer`
+
 **Core Dependencies:**
 * `pandas`: For data manipulation.
 * `gdown`: To download large datasets from Google Drive.
@@ -29,6 +30,10 @@ The importer is responsible for fetching raw taxi data from Google Drive and pop
 
 **Installation command used:**
 ```bash
+pip install -r requirements.txt
+```
+or
+```bash
 pip install python-dotenv pandas gdown sqlalchemy sqlalchemy-utils psycopg2-binary
 ```
 
@@ -37,14 +42,55 @@ pip install python-dotenv pandas gdown sqlalchemy sqlalchemy-utils psycopg2-bina
 The API serves as the bridge between the PostgreSQL database and the Android mobile application.
 
 **Location:** `/NYC-Taxi-FullStack/backend/api`
+
 **Core Dependencies:**
 * `flask`: Web framework for building the REST API.
 * `psycopg2-binary`: To connect with the taxi database.
 * `python-dotenv`: For configuration management.
 
 **Installation command used:**
+
+```bash
+pip install -r requirements.txt
+```
+or
 ```bash
 pip install flask python-dotenv psycopg2-binary
 ```
+
+#### 3. Database Population Instructions
+
+To correctly populate the database, run the importer script located at `/NYC-Taxi-FullStack/backend/importer/main.py`. 
+
+The script provides a text-based menu. **Crucial:** You must execute the options sequentially from 1 to **9** to ensure data integrity and proper database configuration.
+
+| Option | Action (Finnish) | Description |
+| :--- | :--- | :--- |
+| **1** | `luo tietokanta` | **Schema Creation:** Creates the `nyc_taxi` database and all table structures (Yellow Trips, Zones, etc.). |
+| **2** | `lataa valmis datapaketti Google Drivesta` | **Data Download:** Fetches compressed `.dump` files from Google Drive into the `./data` folder. |
+| **3** | `vendorit` | **Lookup Table:** Populates the list of taxi vendors (CMT, VeriFone, etc.). |
+| **4** | `payment_typet` | **Lookup Table:** Populates payment methods (Credit Card, Cash, etc.). |
+| **5** | `borought` | **Lookup Table:** Populates the list of NYC boroughs (Manhattan, Brooklyn, etc.). |
+| **6** | `service_zonet` | **Lookup Table:** Populates service zone categories. |
+| **7** | `rate_codet` | **Lookup Table:** Populates rate codes (Standard, JFK, Newark, etc.). |
+| **8** | `zonet` | **Lookup Table:** Maps specific Location IDs to names and boroughs (requires `taxi_zone_lookup.csv`). |
+| **9** | `yellow_trips` | **Main Data Import:** Restores the massive dataset of taxi trips into the database using `pg_restore`. |
+| **10** | `aseta oikeat auto incrementtien arvot` | **Sequence Fix:** Synchronizes database IDs so new entries won't cause unique constraint errors. |
+
+> **Note 1:** Make sure your PostgreSQL service is running and your `.env` credentials are correct before starting with option 1.
+
+> **Note 2:** On option 2: A file 5016.dat.gz - 5.24 GB will be downloaded, make sure you have enough free disk space.
+
+> **Note 3:** On option 9: This process generates massive temporary files. The 5.24 GB compressed file can theoretically expand to 15-20 GB once imported into the database, and the index creation process requires an additional 10-15 GB of free space. Theoretically, a total of 35 GB is enough, but **in my specific practical case, option 9 required over 50 GB of free disk space** to complete successfully.
+
+#### 4. Database Verification
+You may verify the data import using any PostgreSQL client (such as pgAdmin or DBeaver). Ensure that all 7 tables (`boroughs`, `payment_types`, `rate_codes`, `service_zones`, `vendors`, `yellow_trips`, and `zones`) are correctly created under the **public** schema as shown in Figure 1.
+
+<img width="219" height="849" alt="Figure1" src="https://github.com/user-attachments/assets/30aa2760-96b9-42d2-b5e5-c0d24024fba4" />
+
+**Figure 1.** NYC Taxi database schema and table hierarchy in PostgreSQL
+
+#### 5. 
+
 
 ---
