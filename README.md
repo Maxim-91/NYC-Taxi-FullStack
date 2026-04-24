@@ -67,7 +67,7 @@ The script provides a text-based menu. **Crucial:** You must execute the options
 | Option | Action (Finnish) | Description |
 | :--- | :--- | :--- |
 | **1** | `luo tietokanta` | **Schema Creation:** Creates the `nyc_taxi` database and all table structures (Yellow Trips, Zones, etc.). |
-| **2** | `lataa valmis datapaketti` | **Data Download:** Fetches compressed `.dump` files from Google Drive into the `./data` folder. |
+| **2** | `lataa valmis datapaketti Google Drivesta` | **Data Download:** Fetches compressed `.dump` files from Google Drive into the `./data` folder. |
 | **3** | `vendorit` | **Lookup Table:** Populates the list of taxi vendors (CMT, VeriFone, etc.). |
 | **4** | `payment_typet` | **Lookup Table:** Populates payment methods (Credit Card, Cash, etc.). |
 | **5** | `borought` | **Lookup Table:** Populates the list of NYC boroughs (Manhattan, Brooklyn, etc.). |
