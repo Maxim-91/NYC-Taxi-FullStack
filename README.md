@@ -62,16 +62,22 @@ pip install flask python-dotenv psycopg2-binary
 
 To correctly populate the database, run the importer script located at `/NYC-Taxi-FullStack/backend/importer/main.py`. 
 
-The script provides a text-based menu. **Crucial:** You must execute the options sequentially from 1 to 9 to ensure data integrity.
+The script provides a text-based menu. **Crucial:** You must execute the options sequentially from 1 to 10 to ensure data integrity and proper database configuration.
 
 | Option | Action (Finnish) | Description |
 | :--- | :--- | :--- |
-| **1** | `luo tietokanta` | **Schema Creation:** The script creates the `nyc_taxi` database and all required tables (yellow_trips, zones, etc.). |
-| **2** | `lataa valmis datapaketti` | **Data Download:** Downloads compressed archives from Google Drive into the `/data` folder. (Duration depends on your internet speed). |
-| **3 - 8** | `vendorit, payment_typet...` | **Lookup Tables:** Populates small reference tables (boroughs, payment types, rate codes, etc.). This is nearly instantaneous. |
-| **9** | `yellow_trips` | **Main Import:** The final step. Performs a high-performance import of the primary trip data. This is the longest process. |
+| **1** | `luo tietokanta` | **Schema Creation:** Creates the `nyc_taxi` database and all table structures (Yellow Trips, Zones, etc.). |
+| **2** | `lataa valmis datapaketti` | **Data Download:** Fetches compressed `.dump` files from Google Drive into the `./data` folder. |
+| **3** | `vendorit` | **Lookup Table:** Populates the list of taxi vendors (CMT, VeriFone, etc.). |
+| **4** | `payment_typet` | **Lookup Table:** Populates payment methods (Credit Card, Cash, etc.). |
+| **5** | `borought` | **Lookup Table:** Populates the list of NYC boroughs (Manhattan, Brooklyn, etc.). |
+| **6** | `service_zonet` | **Lookup Table:** Populates service zone categories. |
+| **7** | `rate_codet` | **Lookup Table:** Populates rate codes (Standard, JFK, Newark, etc.). |
+| **8** | `zonet` | **Lookup Table:** Maps specific Location IDs to names and boroughs (requires `taxi_zone_lookup.csv`). |
+| **9** | `yellow_trips` | **Main Data Import:** Restores the massive dataset of taxi trips into the database using `pg_restore`. |
+| **10** | `aseta oikeat auto incrementtien arvot` | **Sequence Fix:** Synchronizes database IDs so new entries won't cause unique constraint errors. |
 
-> **Note:** Make sure your PostgreSQL service is running and your `.env` credentials are correct before starting with option 1.
+> **Note:** Option 10 is essential after the bulk import (Option 9) to ensure that the database's internal counters (sequences) match the imported data.
 
 
 ---
