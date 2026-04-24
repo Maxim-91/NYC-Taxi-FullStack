@@ -62,7 +62,7 @@ pip install flask python-dotenv psycopg2-binary
 
 To correctly populate the database, run the importer script located at `/NYC-Taxi-FullStack/backend/importer/main.py`. 
 
-The script provides a text-based menu. **Crucial:** You must execute the options sequentially from 1 to 10 to ensure data integrity and proper database configuration.
+The script provides a text-based menu. **Crucial:** You must execute the options sequentially from 1 to 9 to ensure data integrity and proper database configuration.
 
 | Option | Action (Finnish) | Description |
 | :--- | :--- | :--- |
@@ -75,7 +75,6 @@ The script provides a text-based menu. **Crucial:** You must execute the options
 | **7** | `rate_codet` | **Lookup Table:** Populates rate codes (Standard, JFK, Newark, etc.). |
 | **8** | `zonet` | **Lookup Table:** Maps specific Location IDs to names and boroughs (requires `taxi_zone_lookup.csv`). |
 | **9** | `yellow_trips` | **Main Data Import:** Restores the massive dataset of taxi trips into the database using `pg_restore`. |
-| **10** | `aseta oikeat auto incrementtien arvot` | **Sequence Fix:** Synchronizes database IDs so new entries won't cause unique constraint errors. |
 
 > **Note:** Option 10 is essential after the bulk import (Option 9) to ensure that the database's internal counters (sequences) match the imported data.
 
