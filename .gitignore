@@ -1,0 +1,175 @@
+### Python Core ###
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[codz]
+*$py.class
+
+# C extensions
+*.so
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+### Project Specific: NYC Taxi ###
+# Ignore large downloaded data files but keep the directory structure
+# This includes specific patterns requested for the importer
+/backend/importer/data/*.gz
+/backend/importer/data/*.dat
+/backend/importer/data/*.sql
+/backend/importer/data/*.dump
+data/*.gz
+data/*.dat
+
+### Secrets and Configuration ###
+# CRITICAL: Never commit passwords or sensitive credentials
+.env
+.envrc
+.pypirc
+.streamlit/secrets.toml
+
+### Environments ###
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+__pypackages__/
+
+### Tooling & Frameworks ###
+
+# PyInstaller
+# Usually these files are written by a python script from a template
+# before PyInstaller builds the exe, so as to inject date/other infos into it.
+*.manifest
+*.spec
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py.cover
+.hypothesis/
+.pytest_cache/
+cover/
+
+# Translations
+*.mo
+*.pot
+
+# Django stuff:
+*.log
+local_settings.py
+db.sqlite3
+db.sqlite3-journal
+
+# Flask stuff:
+instance/
+.webassets-cache
+
+# Scrapy stuff:
+.scrapy
+
+# Documentation (Sphinx / mkdocs)
+docs/_build/
+/site
+
+# Jupyter & IPython
+.ipynb_checkpoints
+profile_default/
+ipython_config.py
+
+# Package Managers (pipenv, poetry, pdm, uv, pixi)
+# It is generally recommended to include lock files in version control for reproducibility.
+# .python-version
+# Pipfile.lock
+# uv.lock
+# poetry.lock
+# poetry.toml
+# pdm.lock
+# pdm.toml
+.pdm-python
+.pdm-build/
+.pixi
+
+# Task Queues & Databases (Celery, Redis, RabbitMQ, ActiveMQ)
+celerybeat-schedule
+celerybeat.pid
+*.rdb
+*.aof
+*.pid
+mnesia/
+rabbitmq/
+rabbitmq-data/
+activemq-data/
+
+# Type Checkers and Linters
+.mypy_cache/
+.dmypy.json
+dmypy.json
+.pyre/
+.pytype/
+.ruff_cache/
+
+# Specialized Tools
+*.sage.py
+cython_debug/
+.abstra/
+marimo/_static/
+marimo/_lsp/
+__marimo__/
+
+### IDEs & Editors ###
+
+# JetBrains (PyCharm)
+# For a more nuclear option you can uncomment the following:
+# .idea/
+/shelf/
+/workspace.xml
+/queries/
+/dataSources/
+/dataSources.local.xml
+
+# Visual Studio Code
+# You could uncomment the following to ignore the entire vscode folder
+# .vscode/
+
+# Other Editors
+.spyderproject
+.spyproject
+.ropeproject
+*.swp
+*.bak
+*.iml
+/httpRequests/
+
+### Operating System ###
+.DS_Store
+Thumbs.db
