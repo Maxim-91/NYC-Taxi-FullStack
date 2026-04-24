@@ -1,9 +1,6 @@
-flask
-psycopg2-binary
-python-dotenv
-
 gdown
 sqlalchemy
 sqlalchemy-utils
 psycopg2-binary
 pandas
+python-dotenv
