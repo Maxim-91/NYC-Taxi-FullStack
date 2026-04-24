@@ -150,12 +150,14 @@ __marimo__/
 
 # JetBrains (PyCharm)
 # For a more nuclear option you can uncomment the following:
-# .idea/
+.idea/
 /shelf/
 /workspace.xml
 /queries/
 /dataSources/
 /dataSources.local.xml
+*.iml
+vcs.xml
 
 # Visual Studio Code
 # You could uncomment the following to ignore the entire vscode folder
