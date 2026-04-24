@@ -78,6 +78,7 @@ The script provides a text-based menu. **Crucial:** You must execute the options
 | **10** | `aseta oikeat auto incrementtien arvot` | **Sequence Fix:** Synchronizes database IDs so new entries won't cause unique constraint errors. |
 
 > **Note 1:** Make sure your PostgreSQL service is running and your `.env` credentials are correct before starting with option 1.
+
 > **Note 2:** On option 2, a file 5016.dat.gz - 5.24GB will be downloaded, make sure you have enough free disk space.
 
 
