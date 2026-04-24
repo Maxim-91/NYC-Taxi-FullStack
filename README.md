@@ -77,7 +77,8 @@ The script provides a text-based menu. **Crucial:** You must execute the options
 | **9** | `yellow_trips` | **Main Data Import:** Restores the massive dataset of taxi trips into the database using `pg_restore`. |
 | **10** | `aseta oikeat auto incrementtien arvot` | **Sequence Fix:** Synchronizes database IDs so new entries won't cause unique constraint errors. |
 
-> **Note:** Option 10 is essential after the bulk import (Option 9) to ensure that the database's internal counters (sequences) match the imported data.
+> **Note 1:** Make sure your PostgreSQL service is running and your `.env` credentials are correct before starting with option 1.
+> **Note 2:** On option 2, a file 5016.dat.gz - 5.24GB will be downloaded, make sure you have enough free disk space.
 
 
 ---
