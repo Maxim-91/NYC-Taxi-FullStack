@@ -16,7 +16,7 @@ Both components are managed as separate projects within **PyCharm Community Edit
 For each project, a dedicated local interpreter has been configured using a virtual environment (`.venv`).
 
 
-### 1. Data Importer Setup
+#### 1. Data Importer Setup
 The importer is responsible for fetching raw taxi data from Google Drive and populating the PostgreSQL database.
 
 **Location:** `/NYC-Taxi-FullStack/backend/importer`  
