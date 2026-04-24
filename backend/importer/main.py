@@ -20,7 +20,6 @@ env = os.environ.copy()
 FOLDER_ID = os.getenv("FOLDER_ID")
 
 # VAIHDA TÄHÄN OMA POSTGRES-TIETOKANNAN SALASANA
-
 DST_DB = os.getenv("DB_NAME")
 DST_DB_PORT = os.getenv("DB_PORT")
 DST_USER = os.getenv("DB_USER")
@@ -198,7 +197,7 @@ def _populate_zones():
             conn.commit()
             try:
                 for _index, row in df.iterrows():
-                    # (1, {'LocationID': 1, ''borough_id': 2})
+                    # (1, {'LocationID': 1, 'borough_id': 2})
                     cur.execute(_query, (row['LocationID'], row['borough_id'], row['zone_name'],
                                          row['service_zone_id']))
                 conn.commit()
@@ -221,7 +220,6 @@ def _reset_sequences():
                 traceback.print_exc()
 
 
-
 def run():
     while True:
         _choice = input(
@@ -229,6 +227,7 @@ def run():
 
         if _choice == '0':
             break
+
         elif _choice == '1':
             dst_user = DST_USER
             dst_pwd = DST_PWD
@@ -239,11 +238,13 @@ def run():
 
         elif _choice == '2':
             _download_from_google_drive(destination='./data', folder_id=FOLDER_ID)
-        elif _choice == '3':
 
+        elif _choice == '3':
             _populate_vendors()
+
         elif _choice == '4':
             _populate_payment_types()
+
         elif _choice == '5':
             _populate_boroughs()
 
@@ -252,15 +253,15 @@ def run():
 
         elif _choice == "7":
             _populate_rate_codes()
+
         elif _choice == "8":
             _populate_zones()
 
         elif _choice == '9':
             user = DST_USER
-
             target_db = DST_DB
-
             dump_dir = "./data"
+
             with psycopg2.connect(user=user, password=env["PGPASSWORD"], database=target_db) as conn:
                 with conn.cursor() as cur:
                     try:
@@ -269,11 +270,12 @@ def run():
                     except Exception as e:
                         conn.rollback()
                         traceback.print_exc()
+
             _export_data_to_db(user, target_db, dump_dir)
             _reset_sequences()
+
         elif _choice == '10':
             _reset_sequences()
-
 
 
 if __name__ == '__main__':
