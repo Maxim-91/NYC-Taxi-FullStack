@@ -62,7 +62,7 @@ pip install flask python-dotenv psycopg2-binary
 
 To correctly populate the database, run the importer script located at `/NYC-Taxi-FullStack/backend/importer/main.py`. 
 
-The script provides a text-based menu. **Crucial:** You must execute the options sequentially from 1 to 10 to ensure data integrity and proper database configuration.
+The script provides a text-based menu. **Crucial:** You must execute the options sequentially from 1 to **9** to ensure data integrity and proper database configuration.
 
 | Option | Action (Finnish) | Description |
 | :--- | :--- | :--- |
@@ -79,13 +79,18 @@ The script provides a text-based menu. **Crucial:** You must execute the options
 
 > **Note 1:** Make sure your PostgreSQL service is running and your `.env` credentials are correct before starting with option 1.
 
-> **Note 2:** On option 2, a file 5016.dat.gz - 5.24GB will be downloaded, make sure you have enough free disk space.
+> **Note 2:** On option 2: A file 5016.dat.gz - 5.24 GB will be downloaded, make sure you have enough free disk space.
+
+> **Note 3:** On option 9: This process generates massive temporary files. The 5.24 GB compressed file can theoretically expand to 15-20 GB once imported into the database, and the index creation process requires an additional 10-15 GB of free space. Theoretically, a total of 35 GB is enough, but **in my specific practical case, option 9 required over 50 GB of free disk space** to complete successfully.
 
 #### 4. Database Verification
 You may verify the data import using any PostgreSQL client (such as pgAdmin or DBeaver). Ensure that all 7 tables (`boroughs`, `payment_types`, `rate_codes`, `service_zones`, `vendors`, `yellow_trips`, and `zones`) are correctly created under the **public** schema as shown in Figure 1.
 
 <img width="219" height="849" alt="Figure1" src="https://github.com/user-attachments/assets/30aa2760-96b9-42d2-b5e5-c0d24024fba4" />
 
-**Figure 1.** NYC Taxi Database Schema and Table Hierarchy in PostgreSQL.
+**Figure 1.** NYC Taxi database schema and table hierarchy in PostgreSQL
+
+#### 5. 
+
 
 ---
