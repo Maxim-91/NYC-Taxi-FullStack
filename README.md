@@ -1,8 +1,12 @@
 # NYC Taxi FullStack Project Report
 
+This project is a full-stack (Backend + Frontend) application designed to analyze and visualize massive datasets of New York City taxi trips. It leverages a Python-based backend for data processing and API delivery, a PostgreSQL database for robust data storage, and an Android mobile application for interactive data visualization and management.
+
 ---
 
 ## Backend
+
+The backend layer serves as the foundation of the system. Its primary responsibilities include efficient ETL (Extract, Transform, Load) operations for handling millions of trip records and providing a secure, scalable REST API that the mobile frontend consumes to display analytics and manage lookup tables.
 
 ### Сomponents
 
@@ -17,6 +21,7 @@ For each project, a dedicated local interpreter has been configured using a virt
 
 
 #### 1. Data Importer Setup
+
 The importer is responsible for fetching raw taxi data from Google Drive and populating the PostgreSQL database.
 
 **Location:** `/NYC-Taxi-FullStack/backend/importer`
@@ -87,6 +92,7 @@ The script provides a text-based menu. **Crucial:** You must execute the options
 > **Note 3. On option 9:** This process generates massive temporary files. The 5.24 GB compressed file will expand to **over 50 GB of disk space** to complete successfully, make sure you have enough free disk space. Additionally, the process may take 30 min. - more than 3 hours (depending on the computer's performance).
 
 #### 4. Database Verification
+
 You may verify the data import using any PostgreSQL client (such as pgAdmin or DBeaver). Ensure that all 7 tables (`boroughs`, `payment_types`, `rate_codes`, `service_zones`, `vendors`, `yellow_trips`, and `zones`) are correctly created under the **public** schema as shown in Figure 1.
 
 <img width="219" height="849" alt="Figure1" src="https://github.com/user-attachments/assets/30aa2760-96b9-42d2-b5e5-c0d24024fba4" />
@@ -95,6 +101,7 @@ You may verify the data import using any PostgreSQL client (such as pgAdmin or D
 
 
 #### 5. Running the API Service
+
 Once the database is fully populated (via the importer), you are ready to start the API service. Follow these steps:
 
 1. Open the project folder `/NYC-Taxi-FullStack/backend/api` in **PyCharm** (or your preferred IDE).
@@ -109,6 +116,7 @@ Once the database is fully populated (via the importer), you are ready to start 
 
 
 #### 6. API Overview (Backend Routes)
+
 The API is built using **RESTful** principles. Each entity (boroughs, payment types, trips) has a specific endpoint, and actions are performed using standard HTTP methods: `GET` (read), `POST` (create), `DELETE` (remove), and `PATCH` (update). All programming capabilities of the code in the `main.py` file are presented in Table 2.
 
 **Table 2.** The API's endpoints
@@ -133,5 +141,14 @@ The API is built using **RESTful** principles. Each entity (boroughs, payment ty
 
 ---
 
+### Backend Conclusion & Status
+
+At this stage, the server-side infrastructure is fully operational.
+* **Database:** Successfully migrated and optimized (indexes created).
+* **API:** All endpoints are verified and responding with correct JSON payloads.
+
+> **Current Status:** Backend development and database population are complete. The API is verified and ready for frontend integration in Android Studio.
 
 ---
+
+## Frontend (Android Application)
