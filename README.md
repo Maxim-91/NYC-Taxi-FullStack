@@ -64,7 +64,7 @@ To correctly populate the database, run the importer script located at `/NYC-Tax
 
 The script provides a text-based menu. **Crucial:** You must execute the options sequentially from 1 to **9** to ensure data integrity and proper database configuration (see Table 1).
 
-Table 1. Text menu of action options
+**Table 1.** Text menu of action options
 
 | Option | Action (Finnish) | Description |
 | :--- | :--- | :--- |
@@ -93,6 +93,7 @@ You may verify the data import using any PostgreSQL client (such as pgAdmin or D
 
 **Figure 1.** NYC Taxi database schema and table hierarchy in PostgreSQL
 
+
 #### 5. Running the API Service
 Once the database is fully populated (via the importer), you are ready to start the API service. Follow these steps:
 
@@ -104,14 +105,13 @@ Once the database is fully populated (via the importer), you are ready to start 
 
 <img width="366" height="534" alt="Figure2" src="https://github.com/user-attachments/assets/6e4abe70-2a47-4e4b-9cf3-eb812c434760" />
 
-Figure 2. Running API on localhost
+**Figure 2.** Running API on localhost
 
----
 
 #### 6. API Overview (Backend Routes)
 The API is built using **RESTful** principles. Each entity (boroughs, payment types, trips) has a specific endpoint, and actions are performed using standard HTTP methods: `GET` (read), `POST` (create), `DELETE` (remove), and `PATCH` (update). All programming capabilities of the code in the `main.py` file are presented in Table 2.
 
-Table 2. The API's endpoints
+**Table 2.** The API's endpoints
 
 | Endpoint | Method | Function / Description |
 | :--- | :--- | :--- |
