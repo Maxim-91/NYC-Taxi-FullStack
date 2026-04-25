@@ -84,7 +84,7 @@ Table 1. Text menu of action options
 
 > **Note 2. On option 2:** A file 5016.dat.gz - 5.24 GB will be downloaded, make sure you have enough free disk space.
 
-> **Note 3.On option 9:** This process generates massive temporary files. The 5.24 GB compressed file will expand to **over 50 GB of disk space** to complete successfully, make sure you have enough free disk space. Additionally, the process may take 30 min. - more than 3 hours (depending on the computer's performance).
+> **Note 3. On option 9:** This process generates massive temporary files. The 5.24 GB compressed file will expand to **over 50 GB of disk space** to complete successfully, make sure you have enough free disk space. Additionally, the process may take 30 min. - more than 3 hours (depending on the computer's performance).
 
 #### 4. Database Verification
 You may verify the data import using any PostgreSQL client (such as pgAdmin or DBeaver). Ensure that all 7 tables (`boroughs`, `payment_types`, `rate_codes`, `service_zones`, `vendors`, `yellow_trips`, and `zones`) are correctly created under the **public** schema as shown in Figure 1.
