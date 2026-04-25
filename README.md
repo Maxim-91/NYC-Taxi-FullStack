@@ -82,9 +82,9 @@ Table 1. Text menu of action options
 
 > **Note 1:** Make sure your PostgreSQL service is running and your `.env` credentials are correct before starting with option 1.
 
-> **Note 2:** On option 2: A file 5016.dat.gz - 5.24 GB will be downloaded, make sure you have enough free disk space.
+> **Note 2. On option 2:** A file 5016.dat.gz - 5.24 GB will be downloaded, make sure you have enough free disk space.
 
-> **Note 3:** On option 9: This process generates massive temporary files. The 5.24 GB compressed file can theoretically expand to 15-20 GB once imported into the database, and the index creation process requires an additional 10-15 GB of free space. Theoretically, a total of 35 GB is enough, but **in my specific practical case, option 9 required over 50 GB of free disk space** to complete successfully.
+> **Note 3.On option 9:** This process generates massive temporary files. The 5.24 GB compressed file will expand to **over 50 GB of disk space** to complete successfully, make sure you have enough free disk space. Additionally, the process may take 30 min. - more than 3 hours (depending on the computer's performance).
 
 #### 4. Database Verification
 You may verify the data import using any PostgreSQL client (such as pgAdmin or DBeaver). Ensure that all 7 tables (`boroughs`, `payment_types`, `rate_codes`, `service_zones`, `vendors`, `yellow_trips`, and `zones`) are correctly created under the **public** schema as shown in Figure 1.
@@ -109,7 +109,7 @@ Figure 2. Running API on localhost
 ---
 
 #### 6. API Overview (Backend Routes)
-The API is built using **RESTful** principles. Each entity (boroughs, payment types, trips) has a specific endpoint, and actions are performed using standard HTTP methods: `GET` (read), `POST` (create), `DELETE` (remove), and `PATCH` (update).
+The API is built using **RESTful** principles. Each entity (boroughs, payment types, trips) has a specific endpoint, and actions are performed using standard HTTP methods: `GET` (read), `POST` (create), `DELETE` (remove), and `PATCH` (update). All programming capabilities of the code in the `main.py` file are presented in Table 2.
 
 Table 2. The API's endpoints
 
