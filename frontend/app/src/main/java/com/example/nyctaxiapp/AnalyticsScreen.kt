@@ -58,7 +58,7 @@ fun AnalyticsScreen(
                         if (year in 2020..2025) {
                             vm.updateDt(selected)
                         } else {
-                            Toast.makeText(context, "Дата має бути в межах між 2020 та 2025 роками", Toast.LENGTH_LONG).show()
+                            Toast.makeText(context, "The selected date from the calendar must be between 2020 and 2025 years", Toast.LENGTH_LONG).show()
                         }
                     }
                     showDatePicker = false
@@ -103,7 +103,7 @@ fun AnalyticsScreen(
         Spacer(modifier = Modifier.height(16.dp))
 
         // 3. Step Label
-        Text("Select Step: year, month or day", color = Color.Black)
+        Text("Select: year, month or day", color = Color.Black)
 
         Spacer(modifier = Modifier.height(8.dp))
 
@@ -126,15 +126,21 @@ fun AnalyticsScreen(
         {
             val errorMessage by vm.errorMessage.collectAsState() // додайте цей state у ViewModel
 
-            if (isLoading) {
+            if (isLoading)
+            {
                 CircularProgressIndicator()
-            } else if (errorMessage != null) {
+            }
+            else if (errorMessage != null)
+            {
                 Text(text = errorMessage!!, color = Color.Red, textAlign = TextAlign.Center)
-            } else if (chartData.isNotEmpty()) {
-                println("Data size: ${chartData.size}")
-                BarChart(chartData)
-            } else {
-                Text("Дані відсутні або оберіть дату", color = Color.Gray)
+            }
+            else if (chartData.isNotEmpty())
+            {
+                TaxiLineChart(chartData, step)
+            }
+            else
+            {
+                Text("No data available or select a date", color = Color.Gray)
             }
         }
     }
@@ -152,38 +158,124 @@ fun StepButton(text: String, isSelected: Boolean, onClick: () -> Unit) {
 }
 
 @Composable
-fun BarChart(data: List<AvgAmountItem>) {
-    // Додаємо невеликий відступ зверху, щоб стовпчик не впирався в край
-    val maxVal = (data.maxOfOrNull { it.avg_amount } ?: 1f) * 1.2f
+fun TaxiLineChart(data: List<AvgAmountItem>, step: String) {
+    // 1. Обчислюємо точні межі для цілих чисел
+    val minDataVal = data.minOfOrNull { it.avg_amount }?.toInt() ?: 0
+    val maxDataVal = data.maxOfOrNull { it.avg_amount }?.toInt() ?: 10
 
-    Canvas(modifier = Modifier.fillMaxSize()) {
-        val spacing = 20.dp.toPx()
-        val barWidth = (size.width - (spacing * (data.size + 1))) / data.size
+    // Додаємо відступ в 1 одиницю зверху та знизу для візуального комфорту
+    val minValY = (minDataVal - 1).toFloat()
+    val maxValY = (maxDataVal + 1).toFloat()
+    val rangeY = maxValY - minValY
 
-        data.forEachIndexed { i, item ->
-            val barHeight = (item.avg_amount / maxVal) * size.height
-            val x = spacing + i * (barWidth + spacing)
+    // 2. Визначаємо кількість рисок (кроків) як різницю між цілими числами
+    val numberOfSteps = (maxValY - minValY).toInt()
 
-            // Малюємо стовпчик
-            drawRect(
-                color = Color(0xFF2196F3),
-                topLeft = Offset(x, size.height - barHeight),
-                size = Size(barWidth, barHeight)
-            )
+    val xAxisLabel = when (step) {
+        "year" -> "Months (pu_month)"
+        "month" -> "Days (pu_day)"
+        "day" -> "Hours (pu_hour)"
+        else -> ""
+    }
 
-            // Малюємо підпис (номер місяця/дня/години)
-            drawContext.canvas.nativeCanvas.apply {
-                val paint = android.graphics.Paint().apply {
-                    color = android.graphics.Color.BLACK
-                    textSize = 12.sp.toPx()
-                    textAlign = android.graphics.Paint.Align.CENTER
-                }
-                drawText(
-                    item.timeLabel.toString(),
-                    x + barWidth / 2,
-                    size.height + 20.dp.toPx(),
+    Column(
+        modifier = Modifier.fillMaxSize().padding(8.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text(
+            text = "Taxi trip statistics in New York city",
+            style = MaterialTheme.typography.titleMedium,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier.padding(bottom = 16.dp)
+        )
+
+        Canvas(modifier = Modifier
+            .fillMaxSize()
+            .padding(start = 50.dp, bottom = 60.dp, end = 20.dp, top = 10.dp)
+        ) {
+            val canvasWidth = size.width
+            val canvasHeight = size.height
+
+            // Малюємо основні осі
+            drawLine(Color.Black, Offset(0f, canvasHeight), Offset(canvasWidth, canvasHeight), strokeWidth = 2.dp.toPx())
+            drawLine(Color.Black, Offset(0f, 0f), Offset(0f, canvasHeight), strokeWidth = 2.dp.toPx())
+
+            val paint = android.graphics.Paint().apply {
+                color = android.graphics.Color.GRAY
+                alpha = 80
+                textSize = 10.sp.toPx()
+                textAlign = android.graphics.Paint.Align.RIGHT
+            }
+
+            // 3. Малюємо риски для КОЖНОГО цілого числа
+            for (i in 0..numberOfSteps) {
+                val currentYValue = (minValY + i).toInt()
+                val yPos = canvasHeight - (i.toFloat() / numberOfSteps) * canvasHeight
+
+                // Горизонтальна лінія сітки
+                drawLine(
+                    color = Color.LightGray,
+                    start = Offset(0f, yPos),
+                    end = Offset(canvasWidth, yPos),
+                    strokeWidth = 1.dp.toPx()
+                )
+
+                // Текст координати Y
+                drawContext.canvas.nativeCanvas.drawText(
+                    currentYValue.toString(),
+                    -10.dp.toPx(),
+                    yPos + 4.dp.toPx(),
                     paint
                 )
+            }
+
+            // Малюємо графік-лінію
+            if (data.isNotEmpty()) {
+                val distanceX = canvasWidth / (if (data.size > 1) data.size - 1 else 1)
+                val points = data.mapIndexed { i, item ->
+                    // Розрахунок позиції відносно динамічної шкали
+                    val fractionY = (item.avg_amount - minValY) / rangeY
+                    Offset(i * distanceX, canvasHeight - fractionY * canvasHeight)
+                }
+
+                for (i in 0 until points.size - 1) {
+                    drawLine(
+                        color = Color(0xFF2196F3),
+                        start = points[i],
+                        end = points[i + 1],
+                        strokeWidth = 2.5.dp.toPx()
+                    )
+                    drawCircle(Color.Blue, radius = 3.dp.toPx(), center = points[i])
+                }
+                drawCircle(Color.Blue, radius = 3.dp.toPx(), center = points.last())
+            }
+
+            // Підписи осей (чорний колір)
+            paint.textAlign = android.graphics.Paint.Align.CENTER
+            paint.color = android.graphics.Color.BLACK
+            paint.alpha = 255
+
+            // Вісь X
+            drawContext.canvas.nativeCanvas.drawText(xAxisLabel, canvasWidth / 2, canvasHeight + 45.dp.toPx(), paint)
+
+            // Вісь Y
+            drawContext.canvas.nativeCanvas.save()
+            drawContext.canvas.nativeCanvas.rotate(-90f, -40.dp.toPx(), canvasHeight / 2)
+            drawContext.canvas.nativeCanvas.drawText("Average taxi trips (avg_amount)", -40.dp.toPx(), canvasHeight / 2, paint)
+            drawContext.canvas.nativeCanvas.restore()
+
+            // Значення X (місяці/дні/години)
+            val labelStep = if (data.size > 12) 2 else 1
+            data.forEachIndexed { i, item ->
+                if (i % labelStep == 0) {
+                    val distanceX = canvasWidth / (if (data.size > 1) data.size - 1 else 1)
+                    drawContext.canvas.nativeCanvas.drawText(
+                        item.timeLabel.toString(),
+                        i * distanceX,
+                        canvasHeight + 20.dp.toPx(),
+                        paint
+                    )
+                }
             }
         }
     }
