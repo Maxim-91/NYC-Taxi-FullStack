@@ -23,13 +23,14 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import java.text.SimpleDateFormat
 import java.util.*
-
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.foundation.layout.Box
 import androidx.compose.material3.CircularProgressIndicator
 
+/** Main screen for displaying taxi trip analytics.
+ *  Handles user interaction for date selection, granularity steps, and data visualization. **/
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AnalyticsScreen(
@@ -38,14 +39,18 @@ fun AnalyticsScreen(
     vm: AnalyticsViewModel = viewModel()
 ) {
     val context = LocalContext.current
+
+    // State management for the Date Picker dialog
     var showDatePicker by remember { mutableStateOf(false) }
     val datePickerState = rememberDatePickerState()
 
+    // Observe UI state from the ViewModel
     val chartData by vm.chartData.collectAsState()
     val dt by vm.selectedDt.collectAsState()
     val step by vm.selectedStep.collectAsState()
     val isLoading by vm.isLoading.collectAsState()
 
+    // UI Logic: Show DatePicker Dialog when triggered
     if (showDatePicker) {
         DatePickerDialog(
             onDismissRequest = { showDatePicker = false },
@@ -55,10 +60,11 @@ fun AnalyticsScreen(
                     if (selected != null) {
                         val cal = Calendar.getInstance().apply { timeInMillis = selected }
                         val year = cal.get(Calendar.YEAR)
+                        // Validation: Restrict data range to specific years
                         if (year in 2020..2025) {
                             vm.updateDt(selected)
                         } else {
-                            Toast.makeText(context, "The selected date from the calendar must be between 2020 and 2025 years", Toast.LENGTH_LONG).show()
+                            Toast.makeText(context, "The selected date must be between 2020 and 2025", Toast.LENGTH_LONG).show()
                         }
                     }
                     showDatePicker = false
@@ -68,8 +74,13 @@ fun AnalyticsScreen(
     }
 
     Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
-        // 1. Header
-        Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceBetween) {
+
+        // 1. Header: Navigation and Screen Title
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
             Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.padding(top = 8.dp)) {
                 IconButton(onClick = onNavigateBack) { Icon(Icons.AutoMirrored.Filled.ArrowBack, "Back") }
                 Text("Management", fontSize = 10.sp)
@@ -83,7 +94,7 @@ fun AnalyticsScreen(
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        // 2. Date Button
+        // 2. Date Selection Button: Changes color based on selection state
         val isDtSelected = dt != null
         Button(
             onClick = { showDatePicker = true },
@@ -102,12 +113,12 @@ fun AnalyticsScreen(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // 3. Step Label
+        // 3. Step Selection Label
         Text("Select: year, month or day", color = Color.Black)
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        // 4. Step Buttons
+        // 4. Step Buttons: Trigger data refetch in the ViewModel
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
             StepButton("Year", step == "year") { vm.updateStep("year") }
             Spacer(modifier = Modifier.width(8.dp))
@@ -118,34 +129,24 @@ fun AnalyticsScreen(
 
         Spacer(modifier = Modifier.height(32.dp))
 
-        // 5. Chart View
+        // 5. Dynamic Data Display Area
         Box(
             modifier = Modifier.fillMaxWidth().weight(1f).background(Color(0xFFF5F5F5)).padding(16.dp),
             contentAlignment = Alignment.Center
-        )
-        {
-            val errorMessage by vm.errorMessage.collectAsState() // додайте цей state у ViewModel
+        ) {
+            val errorMessage by vm.errorMessage.collectAsState()
 
-            if (isLoading)
-            {
-                CircularProgressIndicator()
-            }
-            else if (errorMessage != null)
-            {
-                Text(text = errorMessage!!, color = Color.Red, textAlign = TextAlign.Center)
-            }
-            else if (chartData.isNotEmpty())
-            {
-                TaxiLineChart(chartData, step)
-            }
-            else
-            {
-                Text("No data available or select a date", color = Color.Gray)
+            when {
+                isLoading -> CircularProgressIndicator()
+                errorMessage != null -> Text(text = errorMessage!!, color = Color.Red, textAlign = TextAlign.Center)
+                chartData.isNotEmpty() -> TaxiLineChart(chartData, step)
+                else -> Text("No data available. Please select a date.", color = Color.Gray)
             }
         }
     }
 }
 
+/** Reusable component for step selection buttons. **/
 @Composable
 fun StepButton(text: String, isSelected: Boolean, onClick: () -> Unit) {
     Button(
@@ -157,20 +158,24 @@ fun StepButton(text: String, isSelected: Boolean, onClick: () -> Unit) {
     ) { Text(text) }
 }
 
+/** Custom-drawn Line Chart using Jetpack Compose Canvas.
+ *  Dynamically scales Y-axis based on integer ranges of the data provided. **/
 @Composable
 fun TaxiLineChart(data: List<AvgAmountItem>, step: String) {
-    // 1. Обчислюємо точні межі для цілих чисел
+
+    // Data range calculation for the Y-axis scale
     val minDataVal = data.minOfOrNull { it.avg_amount }?.toInt() ?: 0
     val maxDataVal = data.maxOfOrNull { it.avg_amount }?.toInt() ?: 10
 
-    // Додаємо відступ в 1 одиницю зверху та знизу для візуального комфорту
+    // Adding 1-unit padding to the top and bottom for visual clarity
     val minValY = (minDataVal - 1).toFloat()
     val maxValY = (maxDataVal + 1).toFloat()
     val rangeY = maxValY - minValY
 
-    // 2. Визначаємо кількість рисок (кроків) як різницю між цілими числами
+    // Determine the number of grid lines (one for each integer step)
     val numberOfSteps = (maxValY - minValY).toInt()
 
+    // Dynamic X-axis labeling based on the selected resolution
     val xAxisLabel = when (step) {
         "year" -> "Months (pu_month)"
         "month" -> "Days (pu_day)"
@@ -189,6 +194,7 @@ fun TaxiLineChart(data: List<AvgAmountItem>, step: String) {
             modifier = Modifier.padding(bottom = 16.dp)
         )
 
+        // Custom drawing area for the chart
         Canvas(modifier = Modifier
             .fillMaxSize()
             .padding(start = 50.dp, bottom = 60.dp, end = 20.dp, top = 10.dp)
@@ -196,10 +202,11 @@ fun TaxiLineChart(data: List<AvgAmountItem>, step: String) {
             val canvasWidth = size.width
             val canvasHeight = size.height
 
-            // Малюємо основні осі
+            // --- DRAW AXES ---
             drawLine(Color.Black, Offset(0f, canvasHeight), Offset(canvasWidth, canvasHeight), strokeWidth = 2.dp.toPx())
             drawLine(Color.Black, Offset(0f, 0f), Offset(0f, canvasHeight), strokeWidth = 2.dp.toPx())
 
+            // --- DRAW Y-AXIS GRID AND LABELS ---
             val paint = android.graphics.Paint().apply {
                 color = android.graphics.Color.GRAY
                 alpha = 80
@@ -207,12 +214,11 @@ fun TaxiLineChart(data: List<AvgAmountItem>, step: String) {
                 textAlign = android.graphics.Paint.Align.RIGHT
             }
 
-            // 3. Малюємо риски для КОЖНОГО цілого числа
             for (i in 0..numberOfSteps) {
                 val currentYValue = (minValY + i).toInt()
                 val yPos = canvasHeight - (i.toFloat() / numberOfSteps) * canvasHeight
 
-                // Горизонтальна лінія сітки
+                // Draw horizontal grid line
                 drawLine(
                     color = Color.LightGray,
                     start = Offset(0f, yPos),
@@ -220,7 +226,7 @@ fun TaxiLineChart(data: List<AvgAmountItem>, step: String) {
                     strokeWidth = 1.dp.toPx()
                 )
 
-                // Текст координати Y
+                // Draw Y-axis coordinate text
                 drawContext.canvas.nativeCanvas.drawText(
                     currentYValue.toString(),
                     -10.dp.toPx(),
@@ -229,15 +235,17 @@ fun TaxiLineChart(data: List<AvgAmountItem>, step: String) {
                 )
             }
 
-            // Малюємо графік-лінію
+            // --- DRAW DATA LINE AND POINTS ---
             if (data.isNotEmpty()) {
                 val distanceX = canvasWidth / (if (data.size > 1) data.size - 1 else 1)
+
+                // Map data points to Canvas coordinates
                 val points = data.mapIndexed { i, item ->
-                    // Розрахунок позиції відносно динамічної шкали
                     val fractionY = (item.avg_amount - minValY) / rangeY
                     Offset(i * distanceX, canvasHeight - fractionY * canvasHeight)
                 }
 
+                // Connect points with lines and draw circles at nodes
                 for (i in 0 until points.size - 1) {
                     drawLine(
                         color = Color(0xFF2196F3),
@@ -250,21 +258,22 @@ fun TaxiLineChart(data: List<AvgAmountItem>, step: String) {
                 drawCircle(Color.Blue, radius = 3.dp.toPx(), center = points.last())
             }
 
-            // Підписи осей (чорний колір)
+            // --- DRAW LABELS AND AXIS TITLES ---
             paint.textAlign = android.graphics.Paint.Align.CENTER
             paint.color = android.graphics.Color.BLACK
             paint.alpha = 255
 
-            // Вісь X
+            // X-axis Resolution Title
             drawContext.canvas.nativeCanvas.drawText(xAxisLabel, canvasWidth / 2, canvasHeight + 45.dp.toPx(), paint)
 
-            // Вісь Y
+            // Y-axis Title (Rotated 90 degrees)
             drawContext.canvas.nativeCanvas.save()
             drawContext.canvas.nativeCanvas.rotate(-90f, -40.dp.toPx(), canvasHeight / 2)
             drawContext.canvas.nativeCanvas.drawText("Average taxi trips (avg_amount)", -40.dp.toPx(), canvasHeight / 2, paint)
             drawContext.canvas.nativeCanvas.restore()
 
-            // Значення X (місяці/дні/години)
+            // X-axis Time Labels (e.g., hours or days)
+            // Skip labels if there are too many (density control)
             val labelStep = if (data.size > 12) 2 else 1
             data.forEachIndexed { i, item ->
                 if (i % labelStep == 0) {

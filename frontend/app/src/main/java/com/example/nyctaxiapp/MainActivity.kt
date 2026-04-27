@@ -21,11 +21,17 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import com.example.nyctaxiapp.ui.theme.NYCTaxiAppTheme
 import androidx.compose.foundation.layout.Box
 
+/** Entry point of the application.
+ *  Inherits from ComponentActivity to provide Jetpack Compose support. **/
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        // Enables edge-to-edge display (drawing content behind status/navigation bars)
         enableEdgeToEdge()
+
         setContent {
+            // Apply the custom application theme
             NYCTaxiAppTheme {
                 NYCTaxiAppApp()
             }
@@ -33,27 +39,36 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+/** Main application composable that handles global navigation logic.
+ *  Uses adaptive NavigationSuiteScaffold to automatically switch between
+ *  Navigation Bar (bottom) and Navigation Rail (side) based on screen size. **/
 @Composable
 fun NYCTaxiAppApp() {
-    // Analytics (HOME) тепер за замовчуванням
+    /** avigation state: current active screen.
+     *  rememberSaveable ensures the state persists through configuration changes (e.g., rotation). **/
     var currentDestination by rememberSaveable { mutableStateOf(AppDestinations.ANALYTICS) }
 
+    // Adaptive scaffold for top-level navigation
     NavigationSuiteScaffold(
         navigationSuiteItems = {
-            AppDestinations.entries.forEach {
+            // Iterate through all destinations defined in the enum to create menu items
+            AppDestinations.entries.forEach { destination ->
                 item(
-                    icon = { Icon(it.icon, contentDescription = it.label) },
-                    label = { Text(it.label) },
-                    selected = it == currentDestination,
-                    onClick = { currentDestination = it }
+                    icon = { Icon(destination.icon, contentDescription = destination.label) },
+                    label = { Text(destination.label) },
+                    selected = destination == currentDestination,
+                    onClick = { currentDestination = destination }
                 )
             }
         }
     ) {
+        // Main content area of the application
         Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+            // Box handles innerPadding to avoid content overlapping with the navigation bar
             Box(modifier = Modifier.padding(innerPadding)) {
                 when (currentDestination) {
                     AppDestinations.ANALYTICS -> AnalyticsScreen(
+                        // Manual navigation callbacks for screen internal buttons
                         onNavigateBack = { currentDestination = AppDestinations.MANAGEMENT },
                         onNavigateForward = { currentDestination = AppDestinations.LOCATIONS }
                     )
@@ -65,6 +80,8 @@ fun NYCTaxiAppApp() {
     }
 }
 
+/** Enumeration of available destinations within the app.
+ *  Each entry contains the display label and the associated icon. **/
 enum class AppDestinations(val label: String, val icon: ImageVector) {
     MANAGEMENT("Management", Icons.Default.Build),
     ANALYTICS("Analytics", Icons.Default.Info),
