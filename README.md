@@ -161,7 +161,7 @@ The frontend part of this project is a native Android application built using **
 
 The entry point of the application is `MainActivity.kt`. It utilizes a `NavigationSuiteScaffold` to provide an adaptive UI that switches between a bottom navigation bar and a navigation rail based on the device's screen size. It manages the global state of navigation between the Analytics, Management, and Locations screens.
 
-## Analytics Window
+### Analytics Window
 
 This window is the core of the data visualization logic. The following components work together to provide a seamless user experience:
 
@@ -170,11 +170,12 @@ This window is the core of the data visualization logic. The following component
 * **`ApiService.kt`**: Defines the Retrofit interface for network communication. It uses an `OkHttpClient` with extended timeouts (5 minutes) to ensure stable data fetching from the backend.
 * **`AnalyticsViewModelTest`**: Contains Unit Tests to verify the business logic, ensuring that state transitions and data updates within the ViewModel work correctly in isolation.
 
-### Testing and Functionality
+#### Testing
 
 The application was thoroughly tested using the **Android Emulator** within **Android Studio**. 
 
 **How it works:**
+
 1.  The user selects a date via the Calendar dialog - button "Select a date (2020-2025 years)".
 2.  Once a date is selected, the app automatically triggers a `GET` request to the following endpoint:
     `/api/v1/yellow_trips/<dt>/<step>/avg_amount`
@@ -183,11 +184,15 @@ where **parameters** is:
     * `<step>`: defines the data granularity. By default, it is set to **"year"**.
 3.  Every time the user changes the date (`<dt>`) or the granularity (`<step>`), a new API request is sent automatically.
 
-**Data Visualization**:
+#### Data from API
+
 The API returns a list, depending on the chosen step, this list contains:
+
 * **Year**: average trip amounts (`avg_amount`) for each month  (`pu_month`) (12 values ​​in the list) for the selected year in the date.
 * **Month**: average trip amounts (`avg_amount`) for each day (`pu_day`) (may be 28, 29, 30, or 31 values ​​in the list) for the selected month in the date.
 * **Day**: average trip amounts (`avg_amount`) for each hour (`pu_hour`) (24 values ​​in the list) for the selected day in the date.
+
+#### Visualization
 
 The received data is mapped to the line chart (in practice, I have 1-3 minutes of the process), providing a visual representation of taxi trip statistics in New York city. The results of the Analytics window's operation are demonstrated in **Figures 3-7**.
 
