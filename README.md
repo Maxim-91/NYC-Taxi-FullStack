@@ -155,9 +155,9 @@ At this stage, the server-side infrastructure is fully operational.
 
 ## Frontend (Android Application)
 
-The frontend part of this project is a native Android application built using **Kotlin** and **Jetpack Compose**. It serves as a tool for visualizing and editing previously downloaded data about New York City taxis for 2020-2025 years.
+The frontend part of this project is a native Android application built using **Kotlin** and **Jetpack Compose**. It serves as a tool for visualizing and editing previously downloaded data about New York city taxis for 2020-2025 years.
 
-**Note:** To ensure the application functions correctly, you must first have running the **API Server (Backend)**: `/NYC-Taxi-FullStack/backend/api/main.py`. The app connects to the local server via `http://10.0.2.2:5000/` (default address for the Android Emulator to access the host's localhost).
+> **Note:** To ensure the application functions correctly, you must first have running the **API Server (Backend)**: `/NYC-Taxi-FullStack/backend/api/main.py`. The app connects to the local server via `http://10.0.2.2:5000/` (default address for the Android Emulator to access the host's localhost).
 
 The entry point of the application is `MainActivity.kt`. It utilizes a `NavigationSuiteScaffold` to provide an adaptive UI that switches between a bottom navigation bar and a navigation rail based on the device's screen size. It manages the global state of navigation between the Analytics, Management, and Locations screens.
 
