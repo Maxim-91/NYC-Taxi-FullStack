@@ -95,6 +95,7 @@ The script provides a text-based menu. **Crucial:** You must execute the options
 
 You may verify the data import using any PostgreSQL client (such as pgAdmin or DBeaver). Ensure that all 7 tables (`boroughs`, `payment_types`, `rate_codes`, `service_zones`, `vendors`, `yellow_trips`, and `zones`) are correctly created under the **public** schema as shown in Figure 1.
 
+
 <img width="219" height="849" alt="Figure1" src="https://github.com/user-attachments/assets/30aa2760-96b9-42d2-b5e5-c0d24024fba4" />
 
 **Figure 1.** NYC Taxi database schema and table hierarchy in PostgreSQL
@@ -109,6 +110,7 @@ Once the database is fully populated (via the importer), you are ready to start 
 3. The server should start on your local machine, displaying: `Running on http://127.0.0.1:5000`.
 
 **To verify** that the API is working, open your browser and visit: **[http://127.0.0.1:5000/api/v1/boroughs](http://127.0.0.1:5000/api/v1/boroughs)** (see Figure 2).
+
 
 <img width="366" height="534" alt="Figure2" src="https://github.com/user-attachments/assets/6e4abe70-2a47-4e4b-9cf3-eb812c434760" />
 
@@ -189,3 +191,27 @@ The API returns a list, depending on the chosen step, this list contains:
 
 The received data is mapped to the line chart (in practice, I have 1-3 minutes of the process), providing a visual representation of taxi trip statistics in New York city. The results of the Analytics window's operation are demonstrated in **Figures 3-7**.
 
+
+<img width="416" height="922" alt="Figure3" src="https://github.com/user-attachments/assets/60a36530-bed6-48c8-a566-df9d7f7b8ce0" />
+
+**Figure 3.** First launch of the Android emulator
+
+
+<img width="414" height="920" alt="Figure4" src="https://github.com/user-attachments/assets/c066a732-e866-4c8a-b906-db39a456b928" />
+
+**Figure 4.** Selecting a date from the calendar
+
+
+<img width="413" height="919" alt="Figure5" src="https://github.com/user-attachments/assets/130335e0-8128-4ddb-aa2c-fb9ebae2869b" />
+
+**Figure 5.** A chart of statistics for average amount taxi trips for selected year
+
+
+<img width="415" height="921" alt="Figure6" src="https://github.com/user-attachments/assets/d2c14afe-4ba5-47b1-a5cd-f9ddd252cc33" />
+
+**Figure 6.** A chart of statistics for average amount taxi trips for selected month
+
+
+<img width="415" height="920" alt="Figure7" src="https://github.com/user-attachments/assets/5bbc9994-81c2-4971-a8c3-1bae715d323b" />
+
+**Figure 7.** A chart of statistics for average amount taxi trips for selected day
