@@ -152,3 +152,40 @@ At this stage, the server-side infrastructure is fully operational.
 ---
 
 ## Frontend (Android Application)
+
+The frontend part of this project is a native Android application built using **Kotlin** and **Jetpack Compose**. It serves as a tool for visualizing and editing previously downloaded data about New York City taxis for 2020-2025 years.
+
+**Note:** To ensure the application functions correctly, you must first have running the **API Server (Backend)**: `/NYC-Taxi-FullStack/backend/api/main.py`. The app connects to the local server via `http://10.0.2.2:5000/` (default address for the Android Emulator to access the host's localhost).
+
+The entry point of the application is `MainActivity.kt`. It utilizes a `NavigationSuiteScaffold` to provide an adaptive UI that switches between a bottom navigation bar and a navigation rail based on the device's screen size. It manages the global state of navigation between the Analytics, Management, and Locations screens.
+
+## Analytics Window
+
+This window is the core of the data visualization logic. The following components work together to provide a seamless user experience:
+
+* **`AnalyticsScreen.kt`**: The UI layer built with Jetpack Compose. It contains the date picker, granularity selection buttons (Year, Month, Day), and a custom-drawn **Canvas-based line chart** that dynamically scales to fit the data.
+* **`AnalyticsViewModel`**: The logic layer that manages the UI state using `StateFlow`. It handles user interactions, triggers network requests through Coroutines, and processes the raw data for the chart.
+* **`ApiService.kt`**: Defines the Retrofit interface for network communication. It uses an `OkHttpClient` with extended timeouts (5 minutes) to ensure stable data fetching from the backend.
+* **`AnalyticsViewModelTest`**: Contains Unit Tests to verify the business logic, ensuring that state transitions and data updates within the ViewModel work correctly in isolation.
+
+### Testing and Functionality
+
+The application was thoroughly tested using the **Android Emulator** within **Android Studio**. 
+
+**How it works:**
+1.  The user selects a date via the Calendar dialog - button "Select a date (2020-2025 years)".
+2.  Once a date is selected, the app automatically triggers a `GET` request to the following endpoint:
+    `/api/v1/yellow_trips/<dt>/<step>/avg_amount`
+where **parameters** is:
+    * `<dt>`: this is the selected date converted into a **Unix Timestamp** (milliseconds). For example, if you select **01.01.2023**, it is converted to `1672531200000`.
+    * `<step>`: defines the data granularity. By default, it is set to **"year"**.
+3.  Every time the user changes the date (`<dt>`) or the granularity (`<step>`), a new API request is sent automatically.
+
+**Data Visualization**:
+The API returns a list, depending on the chosen step, this list contains:
+* **Year**: average trip amounts (`avg_amount`) for each month  (`pu_month`) (12 values ​​in the list) for the selected year in the date.
+* **Month**: average trip amounts (`avg_amount`) for each day (`pu_day`) (may be 28, 29, 30, or 31 values ​​in the list) for the selected month in the date.
+* **Day**: average trip amounts (`avg_amount`) for each hour (`pu_hour`) (24 values ​​in the list) for the selected day in the date.
+
+The received data is mapped to the line chart (in practice, I have 1-3 minutes of the process), providing a visual representation of taxi trip statistics in New York city. The results of the Analytics window's operation are demonstrated in **Figures 3-7**.
+
