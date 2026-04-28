@@ -69,8 +69,8 @@ fun NYCTaxiAppApp() {
                 when (currentDestination) {
                     AppDestinations.ANALYTICS -> AnalyticsScreen(
                         // Manual navigation callbacks for screen internal buttons
-                        onNavigateBack = { currentDestination = AppDestinations.MANAGEMENT },
-                        onNavigateForward = { currentDestination = AppDestinations.LOCATIONS }
+                        onNavigateToManagement = { currentDestination = AppDestinations.MANAGEMENT },
+                        onNavigateToLocations = { currentDestination = AppDestinations.LOCATIONS }
                     )
                     AppDestinations.LOCATIONS -> LocationsScreen(
                         onNavigateToAnalytics = { currentDestination = AppDestinations.ANALYTICS },

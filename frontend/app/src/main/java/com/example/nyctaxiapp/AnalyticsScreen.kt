@@ -34,8 +34,8 @@ import androidx.compose.material3.CircularProgressIndicator
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AnalyticsScreen(
-    onNavigateBack: () -> Unit,
-    onNavigateForward: () -> Unit,
+    onNavigateToManagement: () -> Unit,
+    onNavigateToLocations: () -> Unit,
     vm: AnalyticsViewModel = viewModel()
 ) {
     val context = LocalContext.current
@@ -76,23 +76,24 @@ fun AnalyticsScreen(
     Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
 
         // 1. Header: Navigation and Screen Title
+
+        // Top bar with navigation arrows and screen title
         Row(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.padding(top = 8.dp)) {
-                IconButton(onClick = onNavigateBack) { Icon(Icons.AutoMirrored.Filled.ArrowBack, "Back") }
-                Text("Management", fontSize = 10.sp)
-            }
-            Text("Analytics", color = Color.Blue, fontSize = 28.sp, fontWeight = FontWeight.Bold)
-            Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.padding(top = 8.dp)) {
-                IconButton(onClick = onNavigateForward) { Icon(Icons.AutoMirrored.Filled.ArrowForward, "Forward") }
-                Text("Locations", fontSize = 10.sp)
-            }
+            // Left navigation - points to Management
+            NavigationArrow(label = "Management", icon = Icons.AutoMirrored.Filled.ArrowBack, onClick = onNavigateToManagement)
+
+            // Center Title
+            Text("Analytics", fontSize = 30.sp, fontWeight = FontWeight.Bold, color = Color.Blue)
+
+            // Right navigation - points to Locations
+            NavigationArrow(label = "Locations", icon = Icons.AutoMirrored.Filled.ArrowForward, onClick = onNavigateToLocations)
         }
 
-        Spacer(modifier = Modifier.height(24.dp))
+        Spacer(modifier = Modifier.height(16.dp))
 
         // 2. Date Selection Button: Changes color based on selection state
         val isDtSelected = dt != null
@@ -289,3 +290,4 @@ fun TaxiLineChart(data: List<AvgAmountItem>, step: String) {
         }
     }
 }
+
