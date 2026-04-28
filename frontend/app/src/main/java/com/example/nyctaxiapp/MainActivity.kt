@@ -72,8 +72,11 @@ fun NYCTaxiAppApp() {
                         onNavigateBack = { currentDestination = AppDestinations.MANAGEMENT },
                         onNavigateForward = { currentDestination = AppDestinations.LOCATIONS }
                     )
+                    AppDestinations.LOCATIONS -> LocationsScreen(
+                        onNavigateToAnalytics = { currentDestination = AppDestinations.ANALYTICS },
+                        onNavigateToManagement = { currentDestination = AppDestinations.MANAGEMENT }
+                    )
                     AppDestinations.MANAGEMENT -> Text("Management Screen Content")
-                    AppDestinations.LOCATIONS -> Text("Locations Screen Content")
                 }
             }
         }

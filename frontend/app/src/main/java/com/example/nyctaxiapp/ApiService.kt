@@ -27,6 +27,16 @@ interface ApiService {
         @Path("dt") dt: String,
         @Path("step") step: String
     ): List<AvgAmountItem>
+
+    /** Fetches boroughs, service zones, and zones. **/
+    @GET("api/v1/boroughs")
+    suspend fun getBoroughs(): List<Borough>
+
+    @GET("api/v1/zones")
+    suspend fun getZones(): List<Zone>
+
+    @GET("api/v1/service_zones")
+    suspend fun getServiceZones(): List<ServiceZone>
 }
 
 /** Singleton object to manage the Retrofit instance and network configuration. **/
@@ -54,3 +64,17 @@ object RetrofitClient {
             .create(ApiService::class.java)
     }
 }
+
+/** Models for Locations screen. **/
+data class Borough(val id: Int, val borough_name: String)
+data class ServiceZone(val id: Int, val service_zone_name: String)
+data class Zone(
+    val LocationID: Int,
+    val borough_name: String,
+    val service_zone_name: String,
+    val zone_name: String
+)
+
+
+
+
