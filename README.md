@@ -220,3 +220,53 @@ The received data is mapped to the line chart (in practice, I have 1-3 minutes o
 <img width="415" height="920" alt="Figure7" src="https://github.com/user-attachments/assets/5bbc9994-81c2-4971-a8c3-1bae715d323b" />
 
 **Figure 7.** A chart of statistics for average amount taxi trips for selected day
+
+
+### Locations Window
+
+The Locations window provides a comprehensive interface for exploring and filtering New York City taxi zones. It is designed to handle large datasets efficiently, offering users both granular search capabilities and multi-layered filtering options.
+
+* **`LocationsScreen.kt`**: The UI layer built with Jetpack Compose. It features a top navigation bar, a browser-standard search bar, collapsible filter groups (Boroughs and Service Zones), and a structured data table for results.
+* **`LocationsViewModel.kt`**: The business logic layer that manages the UI state using `StateFlow`. It reactively combines search queries and filter selections to provide an instantly updated list of locations.
+* **`ApiService.kt`**: Defines the Retrofit interface for network communication. It handles requests to `/api/v1/boroughs`, `/api/v1/service_zones`, and `/api/v1/zones` to populate the screen with live data.
+* **`UIComponents.kt`**: A shared utility file containing reusable components like `NavigationArrow`, ensuring a consistent design and navigation experience across all application screens. **This file was created later, after Analytics Window, during work on the Locations Window and implemented in `LocationsScreen.kt` and `AnalyticsScreen.kt` and is planned to be used in `ManagementScreen.kt`**.
+
+#### Search Logic
+
+The search functionality is engineered to mirror modern browser standards for a seamless user experience:
+1.  **Flexible Matching**: The search is case-insensitive and automatically ignores leading or trailing whitespaces.
+2.  **Multi-term Querying**: Users can enter multiple words separated by spaces, commas, or slashes. The app processes each term individually and displays a unified list of results without duplicates.
+3.  **Keyboard Integration**: For better accessibility, pressing the "Enter" key on the virtual keyboard triggers the search action, identical to clicking the physical "Search" button.
+4.  **Input Validation**: The search field is restricted to Latin letters, spaces, slashes, and commas. If a user enters a period, it is automatically converted to a comma to maintain query consistency.
+
+#### Advanced Filtering System
+
+The window employs a sophisticated, reactive filtering logic based on the data fetched from the API:
+
+* **Dynamic Checkboxes**: Filter groups for Boroughs and Service Zones are generated dynamically according to the records retrieved from the backend.
+* **"All" Selector Logic**:
+    * By default, the "All" checkbox is active and locked in the 'ON' position.
+    * If any specific sub-item is deselected, the "All" checkbox is automatically deactivated and unlocked.
+    * Re-selecting "All" resets the entire group to the active state and re-locks the switch.
+* **Collapsible UI**: To maximize screen real estate, the filter groups are nested within an animated collapsible element that users can toggle via an arrow icon.
+
+#### Result Presentation
+
+The final list of zones is presented in a table under the section **"List of searched zone names"**. The table provides the following columns (see **Figure 8**):
+* **ID**: The unique `LocationID`.
+* **Zone Name**: The specific name of the taxi zone (including unique markers like "N/A").
+* **Service Zone**: The category of service (e.g., Yellow Zone, Boro Zone, EWR).
+* **Borough**: The specific NYC borough the zone belongs to.
+
+
+<img width="414" height="920" alt="Figure8" src="https://github.com/user-attachments/assets/4125e1a4-e127-46f7-b933-00564b6ebd8e" />
+
+**Figure 8.** Locations window view
+
+
+Every interaction-whether typing a single letter or toggling a checkbox-automatically triggers a re-filtering of the data, ensuring the table always displays the most relevant information.
+
+
+
+
+
