@@ -264,7 +264,7 @@ The final list of zones is presented in a table under the section **"List of sea
 **Figure 8.** Locations window view
 
 
-Every interaction-whether typing a single letter or toggling a checkbox—automatically triggers a re-filtering of the data, ensuring the table always displays the most relevant information.
+Every interaction-whether typing a single letter or toggling a checkbox-automatically triggers a re-filtering of the data, ensuring the table always displays the most relevant information.
 
 
 
