@@ -313,6 +313,35 @@ The Management window implements:
     * The app uses `retrofit2.Response<Unit>` to correctly handle empty server responses (204 No Content), ensuring a smooth transition back to the updated list.
 5.  **Data Persistence**: Every successful modification - whether adding a new method or deleting an old code - automatically triggers a background data refresh (`loadData()`). This ensures that the user is always viewing the most current state of the database, mirroring the standard for professional administrative tools.
 
+#### Visualization
+
+The features of the Management window are shown in **Figures 9-13**.
+
+
+<img width="415" height="920" alt="Figure9" src="https://github.com/user-attachments/assets/5a2c1c2f-1d91-4e45-9d00-c82a6e693770" />
+
+**Figure 9.** Management window view on Payment Methods tab
+
+
+<img width="416" height="920" alt="Figure10" src="https://github.com/user-attachments/assets/b8fc9e1c-c915-49a9-a3c4-a9c6619853ba" />
+
+**Figure 10.** Management window view on Rate Codes tab
+
+
+<img width="413" height="652" alt="Figure11" src="https://github.com/user-attachments/assets/e436a514-5a4d-49f2-8bbc-cb4a89e575a8" />
+
+**Figure 11.** Add new Payment Method (the same for Rate Code) window
+
+
+<img width="416" height="772" alt="Figure12" src="https://github.com/user-attachments/assets/7ad70550-bfa6-4f79-9ff9-ecac7f3cdbfe" />
+
+**Figure 12.** Edite Payment Method (the same for Rate Code) window
+
+
+<img width="414" height="772" alt="Figure13" src="https://github.com/user-attachments/assets/c10d8bb3-2fc5-4fc2-8ecd-7136bc4c81dc" />
+
+**Figure 13.** Delete Payment (the same for Rate Code) window
+
 ---
 
 
