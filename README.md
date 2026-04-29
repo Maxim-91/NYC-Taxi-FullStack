@@ -342,6 +342,14 @@ The features of the Management window are shown in **Figures 9-13**.
 
 **Figure 13.** Delete Payment (the same for Rate Code) window
 
+
 ---
 
+## AI Disclosure
+
+The overall architectural concept, UI/UX design, element placement, and core functionality of this application are entirely my original work as author. **Artificial Intelligence (AI)** was utilized as a supportive tool during the development process for:
+* **Code Optimization**: Refactoring and improving the efficiency of Kotlin and Jetpack Compose logic.
+* **Bug Fixing**: Identifying and resolving technical issues and API communication errors.
+* **Technical Assistance**: Using AI as an advanced documentation and troubleshooting guide to ensure industry-standard coding practices.
+* **Comments**: Placing comments in the code.
 
