@@ -1,4 +1,4 @@
-package com.example.nyctaxiapp
+package com.example.nyctaxiapp.ui
 
 import androidx.compose.animation.*
 import androidx.compose.foundation.background
@@ -25,6 +25,8 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
+import com.example.nyctaxiapp.LocationsViewModel
+import com.example.nyctaxiapp.NavigationArrow
 
 /** Main Screen for displaying and filtering NYC Taxi Locations.
  *  Includes search functionality, collapsible filters for boroughs/service zones,
@@ -62,13 +64,21 @@ fun LocationsScreen(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             // Left navigation - points to Analytics
-            NavigationArrow(label = "Analytics", icon = Icons.AutoMirrored.Filled.ArrowBack, onClick = onNavigateToAnalytics)
+            NavigationArrow(
+                label = "Analytics",
+                icon = Icons.AutoMirrored.Filled.ArrowBack,
+                onClick = onNavigateToAnalytics
+            )
 
             // Center Title
             Text("Locations", fontSize = 30.sp, fontWeight = FontWeight.Bold, color = Color.Blue)
 
             // Right navigation - points to Management
-            NavigationArrow(label = "Management", icon = Icons.AutoMirrored.Filled.ArrowForward, onClick = onNavigateToManagement)
+            NavigationArrow(
+                label = "Management",
+                icon = Icons.AutoMirrored.Filled.ArrowForward,
+                onClick = onNavigateToManagement
+            )
         }
 
         Spacer(modifier = Modifier.height(16.dp))

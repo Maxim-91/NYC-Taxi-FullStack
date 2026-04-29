@@ -1,5 +1,6 @@
-package com.example.nyctaxiapp
+package com.example.nyctaxiapp.ui
 
+import android.graphics.Paint
 import android.widget.Toast
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
@@ -13,7 +14,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.platform.LocalContext
@@ -21,13 +21,15 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import java.text.SimpleDateFormat
 import java.util.*
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.foundation.layout.Box
 import androidx.compose.material3.CircularProgressIndicator
+import com.example.nyctaxiapp.AnalyticsViewModel
+import com.example.nyctaxiapp.AvgAmountItem
+import com.example.nyctaxiapp.NavigationArrow
 
 /** Main screen for displaying taxi trip analytics.
  *  Handles user interaction for date selection, granularity steps, and data visualization. **/
@@ -36,7 +38,7 @@ import androidx.compose.material3.CircularProgressIndicator
 fun AnalyticsScreen(
     onNavigateToManagement: () -> Unit,
     onNavigateToLocations: () -> Unit,
-    vm: AnalyticsViewModel = viewModel()
+    viewModel: AnalyticsViewModel = viewModel()
 ) {
     val context = LocalContext.current
 
@@ -45,10 +47,10 @@ fun AnalyticsScreen(
     val datePickerState = rememberDatePickerState()
 
     // Observe UI state from the ViewModel
-    val chartData by vm.chartData.collectAsState()
-    val dt by vm.selectedDt.collectAsState()
-    val step by vm.selectedStep.collectAsState()
-    val isLoading by vm.isLoading.collectAsState()
+    val chartData by viewModel.chartData.collectAsState()
+    val dt by viewModel.selectedDt.collectAsState()
+    val step by viewModel.selectedStep.collectAsState()
+    val isLoading by viewModel.isLoading.collectAsState()
 
     // UI Logic: Show DatePicker Dialog when triggered
     if (showDatePicker) {
@@ -62,7 +64,7 @@ fun AnalyticsScreen(
                         val year = cal.get(Calendar.YEAR)
                         // Validation: Restrict data range to specific years
                         if (year in 2020..2025) {
-                            vm.updateDt(selected)
+                            viewModel.updateDt(selected)
                         } else {
                             Toast.makeText(context, "The selected date must be between 2020 and 2025", Toast.LENGTH_LONG).show()
                         }
@@ -84,13 +86,21 @@ fun AnalyticsScreen(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             // Left navigation - points to Management
-            NavigationArrow(label = "Management", icon = Icons.AutoMirrored.Filled.ArrowBack, onClick = onNavigateToManagement)
+            NavigationArrow(
+                label = "Management",
+                icon = Icons.AutoMirrored.Filled.ArrowBack,
+                onClick = onNavigateToManagement
+            )
 
             // Center Title
             Text("Analytics", fontSize = 30.sp, fontWeight = FontWeight.Bold, color = Color.Blue)
 
             // Right navigation - points to Locations
-            NavigationArrow(label = "Locations", icon = Icons.AutoMirrored.Filled.ArrowForward, onClick = onNavigateToLocations)
+            NavigationArrow(
+                label = "Locations",
+                icon = Icons.AutoMirrored.Filled.ArrowForward,
+                onClick = onNavigateToLocations
+            )
         }
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -107,7 +117,7 @@ fun AnalyticsScreen(
             Icon(Icons.Default.DateRange, contentDescription = null, tint = if (isDtSelected) Color.White else Color.Red)
             Spacer(modifier = Modifier.width(8.dp))
             Text(
-                text = if (isDtSelected) "Selected date: ${vm.getFormattedDate()}" else "Select a date (2020-2025 years)",
+                text = if (isDtSelected) "Selected date: ${viewModel.getFormattedDate()}" else "Select a date (2020-2025 years)",
                 color = if (isDtSelected) Color.White else Color.Red
             )
         }
@@ -121,11 +131,11 @@ fun AnalyticsScreen(
 
         // 4. Step Buttons: Trigger data refetch in the ViewModel
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
-            StepButton("Year", step == "year") { vm.updateStep("year") }
+            StepButton("Year", step == "year") { viewModel.updateStep("year") }
             Spacer(modifier = Modifier.width(8.dp))
-            StepButton("Month", step == "month") { vm.updateStep("month") }
+            StepButton("Month", step == "month") { viewModel.updateStep("month") }
             Spacer(modifier = Modifier.width(8.dp))
-            StepButton("Day", step == "day") { vm.updateStep("day") }
+            StepButton("Day", step == "day") { viewModel.updateStep("day") }
         }
 
         Spacer(modifier = Modifier.height(32.dp))
@@ -135,7 +145,7 @@ fun AnalyticsScreen(
             modifier = Modifier.fillMaxWidth().weight(1f).background(Color(0xFFF5F5F5)).padding(16.dp),
             contentAlignment = Alignment.Center
         ) {
-            val errorMessage by vm.errorMessage.collectAsState()
+            val errorMessage by viewModel.errorMessage.collectAsState()
 
             when {
                 isLoading -> CircularProgressIndicator()
@@ -208,11 +218,11 @@ fun TaxiLineChart(data: List<AvgAmountItem>, step: String) {
             drawLine(Color.Black, Offset(0f, 0f), Offset(0f, canvasHeight), strokeWidth = 2.dp.toPx())
 
             // --- DRAW Y-AXIS GRID AND LABELS ---
-            val paint = android.graphics.Paint().apply {
+            val paint = Paint().apply {
                 color = android.graphics.Color.GRAY
                 alpha = 80
                 textSize = 10.sp.toPx()
-                textAlign = android.graphics.Paint.Align.RIGHT
+                textAlign = Paint.Align.RIGHT
             }
 
             for (i in 0..numberOfSteps) {
@@ -260,7 +270,7 @@ fun TaxiLineChart(data: List<AvgAmountItem>, step: String) {
             }
 
             // --- DRAW LABELS AND AXIS TITLES ---
-            paint.textAlign = android.graphics.Paint.Align.CENTER
+            paint.textAlign = Paint.Align.CENTER
             paint.color = android.graphics.Color.BLACK
             paint.alpha = 255
 
