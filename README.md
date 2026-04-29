@@ -267,6 +267,52 @@ The final list of zones is presented in a table under the section **"List of sea
 Every interaction-whether typing a single letter or toggling a checkbox-automatically triggers a re-filtering of the data, ensuring the table always displays the most relevant information.
 
 
+### Management Window
 
+The Management window serves as the administrative interface of the application, allowing users to perform full **CRUD (Create, Read, Update, Delete)** operations on reference data such as Payment Methods and Rate Codes. This module is essential for maintaining the data integrity of the taxi system’s underlying infrastructure.
+
+* **`ManagementScreen.kt`**: The UI layer built with Jetpack Compose. It utilizes a clean, tabbed navigation system to switch between different data categories.
+* **`ManagementComponents.kt`**: A shared utility file containing reusable, generic UI components such as `GenericManagementTab`, `ItemActionDialog`, and `DeleteConfirmDialog`. These components allow for a unified design and consistent logic for different data models.
+* **`ManagementViewModel.kt`**: The central logic hub that manages state using `StateFlow`. It orchestrates asynchronous API calls via Kotlin Coroutines and ensures the UI stays synchronized with the backend database.
+* **`ApiService.kt`**: The Retrofit interface defining the management endpoints. It supports `GET` for fetching data, `POST` for creation, `PATCH` for partial updates, and `DELETE` for record removal.
+
+#### Tabbed Interface
+
+To provide an organized workspace, the window is divided into two primary sections:
+* **Payment Methods**: Manage the various ways passengers pay for trips (e.g., Credit Card, Cash, No Charge).
+* **Rate Codes**: Manage the standardized pricing codes used for different trip types (e.g., Standard rate, JFK, Newark).
+
+#### Core Functionality & Logic
+
+The Management window implements:
+
+1.  **Dynamic Listing**: Data is fetched in real-time from the backend. Each item is displayed with its unique ID and descriptive label, followed by quick-action buttons for editing and deletion.
+2.  **Add Logic**:
+    * The system performs a case-insensitive check against existing records to prevent duplicate names or codes.
+    * The "ID" for new records is automatically assigned by the backend server to maintain sequence integrity.
+3.  **Edit Logic**:
+    * The **id field is read-only** during the editing process. Only the descriptive label (`payment_type` or `code`) can be modified.
+    * Validation ensures that the new value is not empty, is not composed solely of digits, and does not conflict with existing records.
+4.  **Safe Deletion**:
+    * A **Confirmation Dialog** is triggered before any record is removed to prevent accidental data loss.
+    * The app uses `retrofit2.Response<Unit>` to correctly handle empty server responses (204 No Content), ensuring a smooth transition back to the updated list.
+
+#### Core Functionality & Logic
+
+The Management window implements:
+
+1.  **Dynamic Listing**: Data is fetched in real-time from the backend. Each item is displayed with its unique ID and descriptive label, followed by quick-action buttons for editing and deletion.
+2.  **Add Logic**:
+    * The system performs a case-insensitive check against existing records to prevent duplicate names or codes.
+    * The "ID" for new records is automatically assigned by the backend server to maintain sequence integrity.
+3.  **Edit Logic**:
+    * The **id field is read-only** during the editing process. Only the descriptive label (`payment_type` or `code`) can be modified.
+    * Validation ensures that the new value is not empty, is not composed solely of digits, and does not conflict with existing records.
+4.  **Safe Deletion**:
+    * A **Confirmation Dialog** is triggered before any record is removed to prevent accidental data loss.
+    * The app uses `retrofit2.Response<Unit>` to correctly handle empty server responses (204 No Content), ensuring a smooth transition back to the updated list.
+5.  **Data Persistence**: Every successful modification - whether adding a new method or deleting an old code - automatically triggers a background data refresh (`loadData()`). This ensures that the user is always viewing the most current state of the database, mirroring the standard for professional administrative tools.
+
+---
 
 
