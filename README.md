@@ -132,9 +132,9 @@ The API is built using **RESTful** principles. Each entity (boroughs, payment ty
 | `/api/v1/payment_types/<id>` | **DELETE** | Removes a specific payment type. |
 | `/api/v1/payment_types/<id>` | **PATCH** | Updates/Edits an existing payment type. |
 | `/api/v1/rate_codes` | **GET** | Retrieves a list of all taxi rate codes. |
+| `/api/v1/rate_codes` | **POST** | Creates a new taxi rate code. |
 | `/api/v1/rate_codes/<id>` | **GET** | Retrieves details of a specific rate code by ID. |
 | `/api/v1/rate_codes/<id>` | **DELETE** | Removes a specific rate code. |
-| `/api/v1/rate_codes` | **POST** | Creates a new taxi rate code. |
 | `/api/v1/rate_codes/<id>` | **PATCH** | Updates/Edits an existing rate code. |
 | `/api/v1/service_zones` | **GET** | Retrieves a list of all service zones. |
 | `/api/v1/zones` | **GET** | Retrieves a list of all taxi zones (pickup/drop-off locations). |
