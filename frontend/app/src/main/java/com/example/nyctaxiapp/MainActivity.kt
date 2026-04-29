@@ -20,6 +20,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.example.nyctaxiapp.ui.theme.NYCTaxiAppTheme
 import androidx.compose.foundation.layout.Box
+import com.example.nyctaxiapp.ui.AnalyticsScreen
+import com.example.nyctaxiapp.ui.LocationsScreen
+import com.example.nyctaxiapp.ui.ManagementScreen
 
 /** Entry point of the application.
  *  Inherits from ComponentActivity to provide Jetpack Compose support. **/
@@ -69,14 +72,16 @@ fun NYCTaxiAppApp() {
                 when (currentDestination) {
                     AppDestinations.ANALYTICS -> AnalyticsScreen(
                         // Manual navigation callbacks for screen internal buttons
-                        onNavigateToManagement = { currentDestination = AppDestinations.MANAGEMENT },
-                        onNavigateToLocations = { currentDestination = AppDestinations.LOCATIONS }
-                    )
+                        onNavigateToManagement = { currentDestination = AppDestinations.MANAGEMENT},
+                        onNavigateToLocations = { currentDestination = AppDestinations.LOCATIONS })
+
                     AppDestinations.LOCATIONS -> LocationsScreen(
                         onNavigateToAnalytics = { currentDestination = AppDestinations.ANALYTICS },
-                        onNavigateToManagement = { currentDestination = AppDestinations.MANAGEMENT }
-                    )
-                    AppDestinations.MANAGEMENT -> Text("Management Screen Content")
+                        onNavigateToManagement = { currentDestination = AppDestinations.MANAGEMENT })
+
+                    AppDestinations.MANAGEMENT -> ManagementScreen(
+                        onNavigateToAnalytics = { currentDestination = AppDestinations.ANALYTICS },
+                        onNavigateToLocations = { currentDestination = AppDestinations.LOCATIONS })
                 }
             }
         }

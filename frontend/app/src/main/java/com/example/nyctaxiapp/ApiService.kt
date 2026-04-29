@@ -6,9 +6,15 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.Path
+import retrofit2.http.Body
+import retrofit2.http.DELETE
+import retrofit2.http.PATCH
+import retrofit2.http.POST
 import java.util.concurrent.TimeUnit
+import retrofit2.Response // for return Response<Unit> for DELETE methods
 
-/** Data model representing the average trip amount for a specific time period. **/
+/** Models for Analytics screen.
+ *  Data model representing the average trip amount for a specific time period. **/
 data class AvgAmountItem(
     val avg_amount: Float,
     /** Use @SerializedName with alternates to handle different JSON keys
@@ -16,6 +22,22 @@ data class AvgAmountItem(
     @SerializedName(value = "pu_hour", alternate = ["pu_day", "pu_month"])
     val timeLabel: Int
 )
+
+/** Models for Locations screen. **/
+data class Borough(val id: Int, val borough_name: String)
+data class ServiceZone(val id: Int, val service_zone_name: String)
+data class Zone(
+    val LocationID: Int,
+    val borough_name: String,
+    val service_zone_name: String,
+    val zone_name: String
+)
+
+/** Models for Management screen. **/
+data class PaymentType(val id: Int, val payment_type: String)
+data class RateCode(
+    @SerializedName("RatecodeID") val id: Int,
+    val code: String)
 
 /** Retrofit interface defining the API endpoints. **/
 interface ApiService {
@@ -37,6 +59,28 @@ interface ApiService {
 
     @GET("api/v1/service_zones")
     suspend fun getServiceZones(): List<ServiceZone>
+
+    /** Fetches, modification and deletion of:
+     *  payment types and rate codes**/
+    // Payment Types
+    @GET("api/v1/payment_types")
+    suspend fun getPaymentTypes(): List<PaymentType>
+    @POST("api/v1/payment_types")
+    suspend fun createPaymentType(@Body body: PaymentType): PaymentType
+    @PATCH("api/v1/payment_types/{id}")
+    suspend fun editePaymentType(@Path("id") id: Int, @Body body: PaymentType): PaymentType
+    @DELETE("api/v1/payment_types/{id}")
+    suspend fun deletePaymentType(@Path("id") id: Int): retrofit2.Response<Unit>
+
+    // Rate Codes
+    @GET("api/v1/rate_codes")
+    suspend fun getRateCodes(): List<RateCode>
+    @POST("api/v1/rate_codes")
+    suspend fun createRateCode(@Body body: RateCode): RateCode
+    @PATCH("api/v1/rate_codes/{id}")
+    suspend fun editeRateCode(@Path("id") id: Int, @Body body: RateCode): RateCode
+    @DELETE("api/v1/rate_codes/{id}")
+    suspend fun deleteRateCode(@Path("id") id: Int): retrofit2.Response<Unit>
 }
 
 /** Singleton object to manage the Retrofit instance and network configuration. **/
@@ -64,17 +108,3 @@ object RetrofitClient {
             .create(ApiService::class.java)
     }
 }
-
-/** Models for Locations screen. **/
-data class Borough(val id: Int, val borough_name: String)
-data class ServiceZone(val id: Int, val service_zone_name: String)
-data class Zone(
-    val LocationID: Int,
-    val borough_name: String,
-    val service_zone_name: String,
-    val zone_name: String
-)
-
-
-
-
